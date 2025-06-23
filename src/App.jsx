@@ -212,6 +212,7 @@ export default function App() {
     try {
       const response = await fetch('https://script.google.com/macros/s/AKfycbwxYVvcM0gsqJJMVAC7OqWb6PyNNFWeR3Ii4k231JIXkK0Uiipbm9LjpRdzVsHnVsWscQ/exec', {
         method: 'POST',
+        mode: 'no-cors', // This line disables CORS enforcement
         headers: {
           'Content-Type': 'application/json',
         },
