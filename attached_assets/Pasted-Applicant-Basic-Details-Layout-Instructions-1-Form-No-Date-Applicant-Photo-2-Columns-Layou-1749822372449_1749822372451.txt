@@ -1,0 +1,59 @@
+Applicant Basic Details Layout Instructions:
+
+1. **Form No & Date + Applicant Photo (2 Columns Layout):**
+   - Left column: stack `Application Form No` and `Date` vertically.
+   - Right column: `Applicant Photo` upload field styled inside a box to resemble a photo preview frame.
+
+2. **Salutation + Name Row (4x1):**
+   - One row with 4 inputs side by side: `Salutation`, `First Name`, `Middle Name`, `Last Name`.
+
+3. **DOB + Gender + Marital Status (3x1):**
+   - One row with 3 fields: `Date of Birth`, `Gender (radio buttons)`, `Marital Status (radio buttons)`.
+
+4. **Nationality + PAN + Aadhaar (3x1):**
+   - One row with: `Nationality`, `PAN`, `Aadhaar Number`.
+
+5. **Phone + Alternate + Email (3x1):**
+   - One row with: `Phone Number`, `Alternate Phone Number`, `Email Address`.
+
+6. **Address:**
+   - Single full-width textarea input.
+
+7. **City + Zip + State + Country (4x1):**
+   - One row with: `City`, `Zip Code`, `State`, `Country`.
+
+---
+
+🔶 Financial Background Layout Instructions:
+
+1. **Employment Status + IT Return + Existing Debts + Dependents (4x1):**
+   - One row with:
+     - `Employment Status` (radio: vertical align)
+     - `Do you file IT return?` (radio: vertical)
+     - `Any Existing Debts` (radio: vertical)
+     - `No. of Dependents` (number input)
+
+2. **Monthly Income + Monthly Expense (2x1):**
+   - One row with: `Monthly Income`, `Monthly Expense`
+
+3. **Monthly Income Details (full width):**
+   - A textarea field
+
+4. **Monthly Expenses Details / Existing Debt (full width):**
+   - A textarea field
+
+5. **Credit Card + CIBIL Score Permission (2x1):**
+   - One row with: `Do you have a Credit Card?`, `Permission to Access CIBIL Score` (radio buttons)
+
+6. Add a “Next” button at the bottom, full width, styled with blue background and hover effect.
+
+---
+
+🎯 Notes:
+* All inputs must be styled uniformly: labels above inputs, clean borders, padding, and rounded corners.
+* Keep the form responsive using CSS Grid or Flexbox.
+* Align radio buttons vertically within their section.
+* Do not modify the existing form field names or types.
+* Style sections with clear spacing between rows and groups.
+
+This layout should visually resemble the form structure from the original PDF document.

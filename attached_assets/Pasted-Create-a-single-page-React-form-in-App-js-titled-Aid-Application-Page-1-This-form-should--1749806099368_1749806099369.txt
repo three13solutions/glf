@@ -1,0 +1,47 @@
+Create a single-page React form in `App.js` titled **"Aid Application - Page 1"**. This form should include the following fields exactly as listed below — no additional fields, and do not omit any. Group them under two sections: **Applicant Basic Details** and **Financial Background**.
+
+All form state should be managed using React `useState`. Use basic HTML input elements (text, radio, number, textarea, etc.) and ensure each field is labeled clearly.
+
+---
+
+**Section 1: Applicant Basic Details**
+1. Application Form No. – type: text
+2. Date – type: date
+3. Applicant Photo – type: file upload (accept only image)
+4. Salutation – type: dropdown (Mr., Mrs., Ms., Other)
+5. First Name – type: text
+6. Middle Name – type: text
+7. Last Name – type: text
+8. Date of Birth – type: date
+9. Gender – type: radio (Male, Female)
+10. Marital Status – type: radio (Single, Married)
+11. Nationality – type: text
+12. PAN – type: text
+13. Aadhaar Number – type: text
+14. Phone Number – type: tel
+15. Alternate Phone Number – type: tel
+16. Email Address – type: email
+17. Address – type: textarea
+18. City – type: text
+19. Zip Code – type: text
+20. State – type: text
+21. Country – type: text
+
+---
+
+**Section 2: Financial Background**
+22. Employment Status – type: radio (Employed, Unemployed, Self-Employed, Retired)
+23. No. of Dependents – type: number
+24. Do you file an IT return – type: radio (Yes, No)
+25. Any Existing Debts – type: radio (Yes, No)
+26. Monthly Income – type: number
+27. Monthly Expense – type: number
+28. Monthly Income Details – type: textarea
+29. Monthly Expenses Details / Existing Debt – type: textarea
+30. Do you have a Credit Card – type: radio (Yes, No)
+31. Permission to Access CIBIL Score – type: radio (Yes, No)
+
+Each field should be wrapped in a div with basic label + input layout. Add a "Next" button at the bottom for future navigation.
+
+Do not include any extra styles, validation, or logic beyond capturing and displaying the data.
+

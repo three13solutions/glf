@@ -1,0 +1,52 @@
+Create a single-page React form in `App.js` titled **"Aid Application - Page 1"**. This form should include the following fields exactly as listed below — no additional fields, and do not omit any. Group them under two sections: **Applicant Basic Details** and **Financial Background**.
+
+All form state should be managed using React `useState`. Use basic HTML input elements (text, radio, number, textarea, etc.) and ensure each field is labeled clearly.
+
+---
+
+**Section 1: Applicant Basic Details**
+1. Application Form No. – type: text
+2. Date – type: date
+3. Applicant Photo – type: file upload (accept only image)
+4. Salutation – type: dropdown (Mr., Mrs., Ms., Other)
+5. First Name – type: text
+6. Middle Name – type: text
+7. Last Name – type: text
+8. Date of Birth – type: date
+9. Gender – type: radio (Male, Female)
+10. Marital Status – type: radio (Single, Married)
+11. Nationality – type: text
+12. PAN – type: text
+13. Aadhaar Number – type: text
+14. Phone Number – type: tel
+15. Alternate Phone Number – type: tel
+16. Email Address – type: email
+17. Address – type: textarea
+18. City – type: text
+19. Zip Code – type: text
+20. State – type: text
+21. Country – type: text
+
+---
+
+Please enhance the existing React form in App.js with clean and user-friendly styling.
+
+Guidelines for styling:
+
+1. Wrap the entire form in a centered container with padding, white background, rounded corners, and a subtle box shadow.
+2. Add a main title at the top: "Aid Application - Page 1".
+3. Use section headings: "Applicant Basic Details" and "Financial Background".
+4. Each input field should be:
+   - Stacked vertically
+   - With a bold label on top
+   - Inputs should be full width, with padding and border-radius
+   - Proper spacing between fields
+5. Group radio options and dropdowns neatly in rows or columns with clear spacing.
+6. Style the "Next" button:
+   - Full width
+   - Background: dark blue (#0077cc)
+   - Text color: white
+   - Rounded corners and padding
+   - Hover effect: darker shade
+7. Make the form responsive on smaller screens.
+8. Use only plain CSS or update `App.css`. Avoid any external libraries like Bootstrap or Tailwind.
