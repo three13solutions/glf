@@ -207,38 +207,116 @@ export default function App() {
       applicantSignature,
     };
 
-    console.log('Submitting form data:', formData);
+    // ... (your existing code for formData, handleChange, etc.)
 
-    try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbwxYVvcM0gsqJJMVAC7OqWb6PyNNFWeR3Ii4k231JIXkK0Uiipbm9LjpRdzVsHnVsWscQ/exec', {
-        method: 'POST',
-        mode: 'no-cors', // This line disables CORS enforcement
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+const handleSubmit = async (e) => {
+  e.preventDefault(); // Prevent default form submission behavior
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
+  setIsSubmitting(true);
+  setSubmissionStatus(''); // Clear previous status
 
-      if (response.ok) {
-        const result = await response.text();
-        console.log('Success response:', result);
-        alert('Form submitted successfully!');
-        
-        // Optionally reset form or redirect
-        // setCurrentPage(1);
-      } else {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        alert(`Form submission failed. Status: ${response.status}`);
-      }
-    } catch (error) {
-      console.error('Network error submitting form:', error);
-      alert(`An error occurred: ${error.message}`);
-    }
-  };
+  console.log('Submitting form data:', formData);
+
+  try {
+    // IMPORTANT: Ensure this URL is YOUR deployed Google Apps Script Web App URL
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwxYVvcM0gsqJJMVAC7OqWb6PyNNFWeR3Ii4k231JIXkK0Uiipbm9LjpRdzVsHnVsWscQ/exec'; 
+
+    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Keep this as it's necessary for direct Apps Script communication
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    // With 'no-cors' mode, we cannot read response.status or response.text().
+    // If the fetch operation itself doesn't throw a network error, we assume success.
+    setSubmissionStatus('success');
+    setFormData({ // Clear form fields on assumed success
+      applicationFormNo: '', // Make sure all your fields are reset here
+      applicantPhoto: '',
+      date: '',
+      salutation: '',
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      dob: '',
+      gender: '',
+      maritalStatus: '',
+      nationality: '',
+      pan: '',
+      aadhaar: '',
+      phone: '',
+      altPhone: '',
+      email: '',
+      address: '',
+      city: '',
+      zip: '',
+      state: '',
+      country: '',
+      employmentStatus: '',
+      itReturn: '',
+      existingDebts: '',
+      dependents: '',
+      monthlyIncome: '',
+      monthlyExpense: '',
+      incomeDetails: '',
+      expenseDetails: '',
+      hasCreditCard: '',
+      allowCibilAccess: '',
+      aidType: '',
+      totalAmountRequired: '',
+      receivedAid: '',
+      otherAidAmount: '',
+      otherAidDetails: '',
+      selfContribution: '',
+      interestFreeLoan: '',
+      selfDescription: '',
+      loanTerms: '',
+      purposeFinancialAid: '',
+      purposeMedicalAid: '',
+      hospitalName: '',
+      doctorName: '',
+      treatmentType: '',
+      treatmentEstimate: '',
+      treatmentDuration: '',
+      prescription: '',
+      instituteName: '',
+      courseName: '',
+      feeBreakdown: '',
+      educationQualification: '',
+      identityProof: '',
+      addressProof: '',
+      supportDocs: '',
+      bankVerificationDocs: '',
+      aidUtilizationProof: '',
+      uploadDocs: '',
+      paymentMethod: '',
+      bankName: '',
+      bankBranch: '',
+      ifscCode: '',
+      accountName: '',
+      accountNumber: '',
+      declaration: '',
+      consentVerification: '',
+      consentCibil: '',
+      understandNoGuarantee: '',
+      understandIncompleteForm: '',
+      signature: ''
+    }); 
+    console.log('Form submission initiated. Check Google Sheet for actual status.');
+
+  } catch (error) {
+    setSubmissionStatus('error');
+    console.error('Network error submitting form:', error);
+    console.log('Please check your network connection or Google Apps Script deployment.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+// ... (your JSX rendering part with submissionStatus messages)
 
   if (currentPage === 1) {
     return (
