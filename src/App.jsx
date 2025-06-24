@@ -134,101 +134,96 @@ export default function App() {
     )
   }
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+const handleFormSubmit = async (e) => {
+  e.preventDefault();
 
-    // Collect form data
-    const formData = {
-      applicationFormNo,
-      date,
-      applicantPhoto,
-      salutation,
-      firstName,
-      middleName,
-      lastName,
-      dateOfBirth,
-      gender,
-      maritalStatus,
-      nationality,
-      pan,
-      aadhaarNumber,
-      phoneNumber,
-      alternatePhoneNumber,
-      emailAddress,
-      address,
-      city,
-      zipCode,
-      state,
-      country,
-      employmentStatus,
-      numDependents,
-      fileITReturn,
-      existingDebts,
-      monthlyIncome,
-      monthlyExpense,
-      monthlyIncomeDetails,
-      monthlyExpensesDetails,
-      haveCreditCard,
-      cibilPermission,
-      typeOfAidRequired,
-      totalAmountRequired,
-      receivedAidFromOtherTrust,
-      otherAidDetails,
-      totalOtherAidsAmount,
-      totalSelfContribution,
-      aboutYourself,
-      interestFreeLoanHelp,
-      loanRepaymentTerms,
-      purposeOfFinancialAid,
-      purposeOfMedicalAid,
-      hospitalName,
-      doctorName,
-      treatmentTypeDetails,
-      treatmentEstimate,
-      treatmentDuration,
-      prescription,
-      instituteName,
-      courseName,
-      courseFeesCostBreakdown,
-      currentEducationalQualification,
-      identityProofDocs,
-      addressProofDocs,
-      aidSupportDocs,
-      bankVerificationDocs,
-      aidUtilizationDocs,
-      uploadedDocuments,
-      preferredPaymentMethod,
-      bankName,
-      bankBranch,
-      ifscCode,
-      accountName,
-      accountNumber,
-      declarationChecks,
-      applicantSignature,
-    };
+  const formDataToSend = new FormData();
 
-    console.log('Submitting form data:', formData);
+  // Append each field to FormData
+  formDataToSend.append('applicationFormNo', applicationFormNo);
+  formDataToSend.append('date', date);
+  formDataToSend.append('salutation', salutation);
+  formDataToSend.append('firstName', firstName);
+  formDataToSend.append('middleName', middleName);
+  formDataToSend.append('lastName', lastName);
+  formDataToSend.append('dateOfBirth', dateOfBirth);
+  formDataToSend.append('gender', gender);
+  formDataToSend.append('maritalStatus', maritalStatus);
+  formDataToSend.append('nationality', nationality);
+  formDataToSend.append('pan', pan);
+  formDataToSend.append('aadhaarNumber', aadhaarNumber);
+  formDataToSend.append('phoneNumber', phoneNumber);
+  formDataToSend.append('alternatePhoneNumber', alternatePhoneNumber);
+  formDataToSend.append('emailAddress', emailAddress);
+  formDataToSend.append('address', address);
+  formDataToSend.append('city', city);
+  formDataToSend.append('zipCode', zipCode);
+  formDataToSend.append('state', state);
+  formDataToSend.append('country', country);
+  formDataToSend.append('employmentStatus', employmentStatus);
+  formDataToSend.append('numDependents', numDependents);
+  formDataToSend.append('fileITReturn', fileITReturn);
+  formDataToSend.append('existingDebts', existingDebts);
+  formDataToSend.append('monthlyIncome', monthlyIncome);
+  formDataToSend.append('monthlyExpense', monthlyExpense);
+  formDataToSend.append('monthlyIncomeDetails', monthlyIncomeDetails);
+  formDataToSend.append('monthlyExpensesDetails', monthlyExpensesDetails);
+  formDataToSend.append('haveCreditCard', haveCreditCard);
+  formDataToSend.append('cibilPermission', cibilPermission);
+  formDataToSend.append('typeOfAidRequired', typeOfAidRequired);
+  formDataToSend.append('totalAmountRequired', totalAmountRequired);
+  formDataToSend.append('receivedAidFromOtherTrust', receivedAidFromOtherTrust);
+  formDataToSend.append('otherAidDetails', otherAidDetails);
+  formDataToSend.append('totalOtherAidsAmount', totalOtherAidsAmount);
+  formDataToSend.append('totalSelfContribution', totalSelfContribution);
+  formDataToSend.append('aboutYourself', aboutYourself);
+  formDataToSend.append('interestFreeLoanHelp', interestFreeLoanHelp);
+  formDataToSend.append('loanRepaymentTerms', loanRepaymentTerms);
+  formDataToSend.append('purposeOfFinancialAid', purposeOfFinancialAid);
+  formDataToSend.append('purposeOfMedicalAid', purposeOfMedicalAid);
+  formDataToSend.append('hospitalName', hospitalName);
+  formDataToSend.append('doctorName', doctorName);
+  formDataToSend.append('treatmentTypeDetails', treatmentTypeDetails);
+  formDataToSend.append('treatmentEstimate', treatmentEstimate);
+  formDataToSend.append('treatmentDuration', treatmentDuration);
+  formDataToSend.append('courseName', courseName);
+  formDataToSend.append('instituteName', instituteName);
+  formDataToSend.append('courseFeesCostBreakdown', courseFeesCostBreakdown);
+  formDataToSend.append('currentEducationalQualification', currentEducationalQualification);
+  formDataToSend.append('preferredPaymentMethod', preferredPaymentMethod);
+  formDataToSend.append('bankName', bankName);
+  formDataToSend.append('bankBranch', bankBranch);
+  formDataToSend.append('ifscCode', ifscCode);
+  formDataToSend.append('accountName', accountName);
+  formDataToSend.append('accountNumber', accountNumber);
+  formDataToSend.append('declarationChecks', declarationChecks);
+  formDataToSend.append('applicantSignature', applicantSignature);
 
-    try {
-    const response = await fetch('https://graceful-living-api.onrender.com/api/applications', {
+  // Handle file uploads
+  if (applicantPhoto) {
+    formDataToSend.append('applicantPhoto', applicantPhoto);
+  }
+
+  if (uploadedDocuments && uploadedDocuments.length > 0) {
+    for (let i = 0; i < uploadedDocuments.length; i++) {
+      formDataToSend.append('uploadedDocuments', uploadedDocuments[i]);
+    }
+  }
+
+  try {
+    const response = await fetch('https://your-backend-url.onrender.com/api/applications', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
+      body: formDataToSend,
     });
 
     if (response.ok) {
       const result = await response.json();
-      console.log('Backend response:', result);
       alert('Form submitted successfully!');
     } else {
       const errorText = await response.text();
-      console.error('Backend error response:', errorText);
       alert(`Form submission failed. Status: ${response.status}`);
     }
   } catch (error) {
-    console.error('Network error submitting form:', error);
     alert(`An error occurred: ${error.message}`);
   }
 };
