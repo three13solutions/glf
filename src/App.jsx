@@ -210,34 +210,28 @@ export default function App() {
     console.log('Submitting form data:', formData);
 
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbwxYVvcM0gsqJJMVAC7OqWb6PyNNFWeR3Ii4k231JIXkK0Uiipbm9LjpRdzVsHnVsWscQ/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+    const response = await fetch('https://graceful-living-api.onrender.com/api/applications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
-
-      if (response.ok) {
-        const result = await response.text();
-        console.log('Success response:', result);
-        alert('Form submitted successfully!');
-        
-        // Optionally reset form or redirect
-        // setCurrentPage(1);
-      } else {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        alert(`Form submission failed. Status: ${response.status}`);
-      }
-    } catch (error) {
-      console.error('Network error submitting form:', error);
-      alert(`An error occurred: ${error.message}`);
+    if (response.ok) {
+      const result = await response.json();
+      console.log('Backend response:', result);
+      alert('Form submitted successfully!');
+    } else {
+      const errorText = await response.text();
+      console.error('Backend error response:', errorText);
+      alert(`Form submission failed. Status: ${response.status}`);
     }
-  };
+  } catch (error) {
+    console.error('Network error submitting form:', error);
+    alert(`An error occurred: ${error.message}`);
+  }
+};
 
   if (currentPage === 1) {
     return (
