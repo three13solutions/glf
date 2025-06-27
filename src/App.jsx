@@ -226,7 +226,7 @@ setSubmitStatus("loading");
 setSubmitMessage("Submitting your form, please wait...");
 
 try {
-  const response = await fetch("https://graceful-living-api-1.onrender.com/api/applications", {
+  const response = await fetch("https://graceful-living-api-1.onrender.com/api/submit", {
     method: "POST",
     body: formDataToSend,
   });
