@@ -205,6 +205,11 @@ const handleFormSubmit = async (e) => {
   formDataToSend.append('declarationChecks', declarationChecks);
   formDataToSend.append('applicantSignature', applicantSignature);
 
+  
+  console.log("🎯 Sending formData to backend...");
+  for (let [key, value] of formDataToSend.entries()) {
+    console.log(`${key}:`, value);
+  }
   // Handle file uploads
   if (applicantPhoto) {
     formDataToSend.append('applicantPhoto', applicantPhoto);
