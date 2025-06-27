@@ -220,11 +220,18 @@ setSubmitStatus("loading");
 setSubmitMessage("Submitting your form, please wait...");
 
 try {
-  const response = await fetch("https://graceful-living-api-1.onrender.com/api/submit", {
-    method: "POST",
-    body: formDataToSend,
-  });
+  console.log("📤 Submitting form to backend...");
 
+const response = await fetch("https://graceful-living-api-1.onrender.com/api/submit", {
+  method: "POST",
+  body: formDataToSend,
+});
+
+console.log("✅ Fetch response:", response);
+  console.log("📦 FormData entries:");
+for (let pair of formDataToSend.entries()) {
+  console.log(pair[0], pair[1]);
+}
   if (response.ok) {
     const result = await response.json();
     console.log("✅ Form submitted. Document URL:", result.documentUrl);
