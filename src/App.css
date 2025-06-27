@@ -313,3 +313,25 @@ button:active {
     padding: 10px;
   }
 }
+.submission-message {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.submission-message.loading {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.submission-message.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.submission-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
