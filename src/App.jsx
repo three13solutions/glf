@@ -243,6 +243,7 @@ try {
 } catch (error) {
   setSubmitStatus("error");
   setSubmitMessage(`❌ An unexpected error occurred: ${error.message}`);
+  console.error("💥 Submission error:", error);
 }
 
 };
