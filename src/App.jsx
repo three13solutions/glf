@@ -222,16 +222,29 @@ const handleFormSubmit = async (e) => {
       body: formDataToSend,
     });
 
-    if (response.ok) {
-      const result = await response.json();
-      alert('Form submitted successfully!');
-    } else {
-      const errorText = await response.text();
-      alert(`Form submission failed. Status: ${response.status}`);
-    }
-  } catch (error) {
-    alert(`An error occurred: ${error.message}`);
+setSubmitStatus("loading");
+setSubmitMessage("Submitting your form, please wait...");
+
+try {
+  const response = await fetch("https://graceful-living-api.onrender.com/api/applications", {
+    method: "POST",
+    body: formDataToSend,
+  });
+
+  if (response.ok) {
+    const result = await response.json();
+    setSubmitStatus("success");
+    setSubmitMessage("✅ Form submitted successfully! Thank you.");
+  } else {
+    const errorText = await response.text();
+    setSubmitStatus("error");
+    setSubmitMessage(`❌ Form submission failed. (${response.status}): ${errorText}`);
   }
+} catch (error) {
+  setSubmitStatus("error");
+  setSubmitMessage(`❌ An unexpected error occurred: ${error.message}`);
+}
+
 };
 
   if (currentPage === 1) {
