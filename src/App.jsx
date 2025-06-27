@@ -233,6 +233,8 @@ try {
 
   if (response.ok) {
     const result = await response.json();
+    console.log("✅ Form submitted. Document URL:", result.documentUrl);
+
     setSubmitStatus("success");
     setSubmitMessage("✅ Form submitted successfully! Thank you.");
   } else {
@@ -245,7 +247,6 @@ try {
   setSubmitMessage(`❌ An unexpected error occurred: ${error.message}`);
   console.error("💥 Submission error:", error);
 }
-
 };
 
   if (currentPage === 1) {
