@@ -186,10 +186,16 @@ const handleFormSubmit = async (e) => {
   formDataToSend.append('treatmentTypeDetails', treatmentTypeDetails);
   formDataToSend.append('treatmentEstimate', treatmentEstimate);
   formDataToSend.append('treatmentDuration', treatmentDuration);
+  formDataToSend.append('prescription', prescription);
   formDataToSend.append('courseName', courseName);
   formDataToSend.append('instituteName', instituteName);
   formDataToSend.append('courseFeesCostBreakdown', courseFeesCostBreakdown);
   formDataToSend.append('currentEducationalQualification', currentEducationalQualification);
+  formDataToSend.append('identityProofDocs', identityProofDocs.join(','));
+  formDataToSend.append('addressProofDocs', addressProofDocs.join(','));
+  formDataToSend.append('aidSupportDocs', aidSupportDocs.join(','));
+  formDataToSend.append('bankVerificationDocs', bankVerificationDocs.join(','));
+  formDataToSend.append('aidUtilizationDocs', aidUtilizationDocs.join(','));
   formDataToSend.append('preferredPaymentMethod', preferredPaymentMethod);
   formDataToSend.append('bankName', bankName);
   formDataToSend.append('bankBranch', bankBranch);
