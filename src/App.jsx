@@ -40,10 +40,10 @@ export default function App() {
     };
     console.log('Form Data:', formData);
     try {
-      const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
+    const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
+  method: "POST",
+headers: {
+   "Content-Type": "application/json",
         },
       body: JSON.stringify(formData),
       });
