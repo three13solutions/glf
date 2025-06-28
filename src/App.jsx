@@ -89,6 +89,9 @@ export default function App() {
   // Page state
   const [currentPage, setCurrentPage] = useState(1)
 
+  //Form Status
+  const [formStatus, setFormStatus] = useState('');
+
   // Handle checkbox changes for aid types
   const handleAidTypeChange = (aidType) => {
     setTypeOfAidRequired(prev => 
@@ -210,21 +213,23 @@ export default function App() {
     console.log('Submitting form data:', formData);
 
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbwxYVvcM0gsqJJMVAC7OqWb6PyNNFWeR3Ii4k231JIXkK0Uiipbm9LjpRdzVsHnVsWscQ/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+      body: JSON.stringify(formData),
       });
 
       console.log('Response status:', response.status);
       console.log('Response headers:', response.headers);
 
       if (response.ok) {
-        const result = await response.text();
-        console.log('Success response:', result);
-        alert('Form submitted successfully!');
+  setFormStatus('✅ Submitted successfully!');
+} else {
+  setFormStatus('❌ Submission failed.');
+}
+
         
         // Optionally reset form or redirect
         // setCurrentPage(1);
@@ -1451,6 +1456,7 @@ export default function App() {
             <div className="grid-2-col">
               <button type="button" onClick={() => setCurrentPage(2)}>Previous</button>
               <button type="submit">Submit</button>
+              <p>{formStatus}</p>
             </div>
           </div>
         </form>
