@@ -60,6 +60,7 @@ export default function App() {
     } catch (error) {
       console.error('Error:', error);
       setFormStatus('❌ Submission failed due to network error.');
+    }
   };
 
   return (
