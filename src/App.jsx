@@ -13,6 +13,7 @@ export default function App() {
   const [textareaValue, setTextareaValue] = useState('');
   const [numberValue, setNumberValue] = useState('');
   const [checkboxValues, setCheckboxValues] = useState([]);
+  const [formStatus, setFormStatus] = useState('');
 
   const handleCheckboxChange = (value) => {
     setCheckboxValues((prev) =>
@@ -22,7 +23,7 @@ export default function App() {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = {
       textValue,
@@ -38,23 +39,27 @@ export default function App() {
       checkboxValues,
     };
     console.log('Form Data:', formData);
+
     try {
       const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
-      method: "POST",
-      headers: {
+        method: "POST",
+        headers: {
           "Content-Type": "application/json",
         },
-      body: JSON.stringify(formData),
+        body: JSON.stringify(formData),
       });
 
       console.log('Response status:', response.status);
       console.log('Response headers:', response.headers);
 
       if (response.ok) {
-  setFormStatus('✅ Submitted successfully!');
-} else {
-  setFormStatus('❌ Submission failed.');
-}
+        setFormStatus('✅ Submitted successfully!');
+      } else {
+        setFormStatus('❌ Submission failed.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setFormStatus('❌ Submission failed due to network error.');
     }
   };
 
