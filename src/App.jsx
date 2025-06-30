@@ -23,44 +23,57 @@ export default function App() {
     );
   };
 
-  const handleSubmit = async (e) => { // Changed to async function
-    e.preventDefault();
-    const formData = {
-      textValue,
-      dateValue,
-      singleFile,
-      multipleFiles,
-      selectValue,
-      radioValue,
-      telValue,
-      emailValue,
-      textareaValue,
-      numberValue,
-      checkboxValues,
-    };
-    console.log('Form Data:', formData);
-    try {
-            const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
-        method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-        },
-      body: JSON.stringify(formData),
-      });
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
-
-      if (response.ok) {
-        setFormStatus('✅ Submitted successfully!');
-      } else {
-        setFormStatus('❌ Submission failed.');
-      }
-    } catch (error) { // Added error handling for fetch
-      console.error('Error during form submission:', error);
-      setFormStatus('❌ Submission failed due to an error.');
-    }
+  // Wrap your form fields into a plain object
+  const fieldData = {
+    textValue,
+    dateValue,
+    selectValue,
+    radioValue,
+    telValue,
+    emailValue,
+    textareaValue,
+    numberValue,
+    checkboxValues,
   };
+
+  // Prepare FormData for file + field upload
+  const formData = new FormData();
+
+  // Add JSON form fields under 'data'
+  formData.append('data', JSON.stringify(fieldData));
+
+  // Add single file (if present)
+  if (singleFile) {
+    formData.append('documents', singleFile);
+  }
+
+  // Add multiple files (if any)
+  multipleFiles.forEach((file) => {
+    formData.append('documents', file);
+  });
+
+  try {
+    const response = await fetch('https://glf-form-submission-api.onrender.com/api/submit', {
+      method: 'POST',
+      body: formData, // No need for Content-Type header
+    });
+
+    console.log('Response status:', response.status);
+    console.log('Response headers:', response.headers);
+
+    if (response.ok) {
+      setFormStatus('✅ Submitted successfully!');
+    } else {
+      setFormStatus('❌ Submission failed.');
+    }
+  } catch (error) {
+    console.error('Error during form submission:', error);
+    setFormStatus('❌ Submission failed due to an error.');
+  }
+};
 
   return (
     <main>
