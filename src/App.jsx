@@ -54,6 +54,10 @@ export default function App() {
   multipleFiles.forEach((file) => {
     formData.append('documents', file);
   });
+console.log('Submitting form with files:');
+for (let pair of formData.entries()) {
+  console.log(pair[0], pair[1]);
+}
 
   try {
     const response = await fetch('https://glf-form-submission-api.onrender.com/api/submit', {
@@ -78,7 +82,7 @@ export default function App() {
   return (
     <main>
       <h1>All Field Types Form</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} name="glf-aid-form">
 
         {/* Text Input */}
         <div className="field-group">
