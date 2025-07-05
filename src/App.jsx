@@ -225,39 +225,26 @@ export default function App() {
   });
 
   try {
-    const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
-      method: "POST",
-      body: form, // ❗ No headers set manually
-    });
+  const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
+    method: "POST",
+    body: form, // ❗ No headers set manually
+  });
 
-    console.log('Response status:', response.status);
+  console.log('Response status:', response.status);
 
-    if (response.ok) {
-      setFormStatus('✅ Submitted successfully!');
-    } else {
-      const errorText = await response.text();
-      console.error('Error response:', errorText);
-      setFormStatus('❌ Submission failed.');
-    }
-  } catch (error) {
-    console.error('❌ Network error:', error);
-    setFormStatus('❌ Submission failed due to an error.');
+  if (response.ok) {
+    setFormStatus('✅ Submitted successfully!');
+    // Optionally reset form or redirect
+    // setCurrentPage(1);
+  } else {
+    const errorText = await response.text();
+    console.error('Error response:', errorText);
+    setFormStatus('❌ Submission failed.');
   }
-};
-
-        
-        // Optionally reset form or redirect
-        // setCurrentPage(1);
-      } else {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        alert(`Form submission failed. Status: ${response.status}`);
-      }
-    } catch (error) {
-      console.error('Network error submitting form:', error);
-      alert(`An error occurred: ${error.message}`);
-    }
-  };
+} catch (error) {
+  console.error('❌ Network error:', error);
+  setFormStatus('❌ Submission failed due to an error.');
+}
 
   if (currentPage === 1) {
     return (
