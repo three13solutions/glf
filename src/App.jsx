@@ -90,7 +90,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState(1)
 
   //Form Status
-  const [formStatus, setFormStatus] = useState('');
+  const [formStatus, setFormStatus] = useState('')
 
   // Handle checkbox changes for aid types
   const handleAidTypeChange = (aidType) => {
@@ -138,113 +138,130 @@ export default function App() {
   }
 
   const handleFormSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault()
 
-  // ✅ Wrap all fields into a formData object
-  const fieldData = {
-    applicationFormNo,
-    date,
-    salutation,
-    firstName,
-    middleName,
-    lastName,
-    dateOfBirth,
-    gender,
-    maritalStatus,
-    nationality,
-    pan,
-    aadhaarNumber,
-    phoneNumber,
-    alternatePhoneNumber,
-    emailAddress,
-    address,
-    city,
-    zipCode,
-    state,
-    country,
-    employmentStatus,
-    numDependents,
-    fileITReturn,
-    existingDebts,
-    monthlyIncome,
-    monthlyExpense,
-    monthlyIncomeDetails,
-    monthlyExpensesDetails,
-    haveCreditCard,
-    cibilPermission,
-    typeOfAidRequired,
-    totalAmountRequired,
-    receivedAidFromOtherTrust,
-    otherAidDetails,
-    totalOtherAidsAmount,
-    totalSelfContribution,
-    aboutYourself,
-    interestFreeLoanHelp,
-    loanRepaymentTerms,
-    purposeOfFinancialAid,
-    purposeOfMedicalAid,
-    hospitalName,
-    doctorName,
-    treatmentTypeDetails,
-    treatmentEstimate,
-    treatmentDuration,
-    prescription,
-    instituteName,
-    courseName,
-    courseFeesCostBreakdown,
-    currentEducationalQualification,
-    identityProofDocs,
-    addressProofDocs,
-    aidSupportDocs,
-    bankVerificationDocs,
-    aidUtilizationDocs,
-    preferredPaymentMethod,
-    bankName,
-    bankBranch,
-    ifscCode,
-    accountName,
-    accountNumber,
-    declarationChecks,
-    applicantSignature,
-  };
+    // Only allow submission from page 3
+    if (currentPage !== 3) {
+      setFormStatus('Please complete all pages before submitting.')
+      return
+    }
 
-  // ✅ Prepare FormData
-  const form = new FormData();
+    // Basic validation
+    if (!firstName || !lastName || !emailAddress || !phoneNumber) {
+      setFormStatus('Please fill in all required fields.')
+      return
+    }
 
-  // 📦 Append form fields
-  form.append('data', JSON.stringify(fieldData));
+    setFormStatus('Submitting...')
 
-  // 📸 Append applicant photo if exists
-  if (applicantPhoto) {
-    form.append('documents', applicantPhoto);
+    // Wrap all fields into a formData object
+    const fieldData = {
+      applicationFormNo,
+      date,
+      salutation,
+      firstName,
+      middleName,
+      lastName,
+      dateOfBirth,
+      gender,
+      maritalStatus,
+      nationality,
+      pan,
+      aadhaarNumber,
+      phoneNumber,
+      alternatePhoneNumber,
+      emailAddress,
+      address,
+      city,
+      zipCode,
+      state,
+      country,
+      employmentStatus,
+      numDependents,
+      fileITReturn,
+      existingDebts,
+      monthlyIncome,
+      monthlyExpense,
+      monthlyIncomeDetails,
+      monthlyExpensesDetails,
+      haveCreditCard,
+      cibilPermission,
+      typeOfAidRequired,
+      totalAmountRequired,
+      receivedAidFromOtherTrust,
+      otherAidDetails,
+      totalOtherAidsAmount,
+      totalSelfContribution,
+      aboutYourself,
+      interestFreeLoanHelp,
+      loanRepaymentTerms,
+      purposeOfFinancialAid,
+      purposeOfMedicalAid,
+      hospitalName,
+      doctorName,
+      treatmentTypeDetails,
+      treatmentEstimate,
+      treatmentDuration,
+      prescription,
+      instituteName,
+      courseName,
+      courseFeesCostBreakdown,
+      currentEducationalQualification,
+      identityProofDocs,
+      addressProofDocs,
+      aidSupportDocs,
+      bankVerificationDocs,
+      aidUtilizationDocs,
+      preferredPaymentMethod,
+      bankName,
+      bankBranch,
+      ifscCode,
+      accountName,
+      accountNumber,
+      declarationChecks,
+      applicantSignature,
+    }
+
+    // Prepare FormData
+    const form = new FormData()
+
+    // Append form fields
+    form.append('data', JSON.stringify(fieldData))
+
+    // Append applicant photo if exists
+    if (applicantPhoto) {
+      form.append('documents', applicantPhoto)
+    }
+
+    // Append supporting documents
+    if (uploadedDocuments && uploadedDocuments.length > 0) {
+      uploadedDocuments.forEach((file) => {
+        form.append('documents', file)
+      })
+    }
+
+    try {
+      const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
+        method: "POST",
+        body: form,
+      })
+
+      console.log('Response status:', response.status)
+
+      if (response.ok) {
+        setFormStatus('✅ Submitted successfully!')
+        // Optionally reset form or redirect
+        // setCurrentPage(1)
+      } else {
+        const errorText = await response.text()
+        console.error('Error response:', errorText)
+        setFormStatus('❌ Submission failed.')
+      }
+    } catch (error) {
+      console.error('❌ Network error:', error)
+      setFormStatus('❌ Submission failed due to an error.')
+    }
   }
-
-  // 📄 Append supporting documents
-  uploadedDocuments.forEach((file) => {
-    form.append('documents', file);
-  });
-
-  try {
-  const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
-    method: "POST",
-    body: form, // ❗ No headers set manually
-  });
-
-  console.log('Response status:', response.status);
-
-  if (response.ok) {
-    setFormStatus('✅ Submitted successfully!');
-    // Optionally reset form or redirect
-    // setCurrentPage(1);
-  } else {
-    const errorText = await response.text();
-    console.error('Error response:', errorText);
-    setFormStatus('❌ Submission failed.');
-  }
-} catch (error) {
-  console.error('❌ Network error:', error);
-  setFormStatus('❌ Submission failed due to an error.');
-}
 
   if (currentPage === 1) {
     return (
