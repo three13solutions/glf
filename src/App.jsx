@@ -90,7 +90,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState(1)
 
   //Form Status
-  const [formStatus, setFormStatus] = useState('')
+  const [formStatus, setFormStatus] = useState('');
 
   // Handle checkbox changes for aid types
   const handleAidTypeChange = (aidType) => {
@@ -137,24 +137,11 @@ export default function App() {
     )
   }
 
+  // This handleFormSubmit function is now defined once at the top level
+  // and will be called only by the final submit button on Page 3.
   const handleFormSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault(); // Prevent default form submission behavior
 
-    // Only allow submission from page 3
-    if (currentPage !== 3) {
-      setFormStatus('Please complete all pages before submitting.')
-      return
-    }
-
-    // Basic validation
-    if (!firstName || !lastName || !emailAddress || !phoneNumber) {
-      setFormStatus('Please fill in all required fields.')
-      return
-    }
-
-    setFormStatus('Submitting...')
-
-    // Wrap all fields into a formData object
     const fieldData = {
       applicationFormNo,
       date,
@@ -220,82 +207,82 @@ export default function App() {
       accountNumber,
       declarationChecks,
       applicantSignature,
-    }
+    };
 
-    // Prepare FormData
-    const form = new FormData()
+    const form = new FormData();
+    form.append('data', JSON.stringify(fieldData));
 
-    // Append form fields
-    form.append('data', JSON.stringify(fieldData))
-
-    // Append applicant photo if exists
     if (applicantPhoto) {
-      form.append('documents', applicantPhoto)
+      form.append('documents', applicantPhoto);
     }
 
-    // Append supporting documents
-    if (uploadedDocuments && uploadedDocuments.length > 0) {
-      uploadedDocuments.forEach((file) => {
-        form.append('documents', file)
-      })
-    }
+    uploadedDocuments.forEach((file) => {
+      form.append('documents', file);
+    });
 
     try {
       const response = await fetch("https://glf-form-submission-api.onrender.com/api/submit", {
         method: "POST",
         body: form,
-      })
+      });
 
-      console.log('Response status:', response.status)
+      console.log('Response status:', response.status);
 
       if (response.ok) {
-        setFormStatus('✅ Submitted successfully!')
-        // Optionally reset form or redirect
-        // setCurrentPage(1)
+        setFormStatus('✅ Submitted successfully!');
+        // Optionally reset form or redirect after successful submission
+        // setCurrentPage(1);
+        // Add logic to clear all form states here if needed
       } else {
-        const errorText = await response.text()
-        console.error('Error response:', errorText)
-        setFormStatus('❌ Submission failed.')
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        setFormStatus(`❌ Submission failed: ${errorText}`);
       }
     } catch (error) {
-      console.error('❌ Network error:', error)
-      setFormStatus('❌ Submission failed due to an error.')
+      console.error('❌ Network error:', error);
+      setFormStatus('❌ Submission failed due to a network error.');
     }
-  }
+  };
 
+
+  // Conditional Rendering based on currentPage
   if (currentPage === 1) {
     return (
       <main>
         <h1>Aid Application - Page 1</h1>
 
-        <form onSubmit={handleFormSubmit}>
+        {/* The form's onSubmit is removed here because submission only happens on Page 3 */}
+        <form> 
           <h2>Applicant Basic Details</h2>
 
           {/* 1. Form No & Date + Applicant Photo (2 Columns) */}
           <div className="grid-2-col">
             <div className="form-date-group">
               <div className="field-group">
-                <label>Application Form No.:</label>
+                <label htmlFor="applicationFormNo">Application Form No.:</label>
                 <input 
                   type="text" 
+                  id="applicationFormNo"
                   value={applicationFormNo} 
                   onChange={(e) => setApplicationFormNo(e.target.value)} 
                 />
               </div>
               <div className="field-group">
-                <label>Date:</label>
+                <label htmlFor="date">Date:</label>
                 <input 
                   type="date" 
+                  id="date"
                   value={date} 
                   onChange={(e) => setDate(e.target.value)} 
                 />
               </div>
             </div>
             <div className="photo-upload-container">
-              <label>Applicant Photo:</label>
+              <label htmlFor="applicantPhoto">Applicant Photo:</label>
               <div className="photo-frame">
                 <input 
                   type="file" 
+                  id="applicantPhoto"
                   accept="image/*" 
                   onChange={(e) => setApplicantPhoto(e.target.files[0])} 
                 />
@@ -306,8 +293,12 @@ export default function App() {
           {/* 2. Salutation + Name Row (4x1) */}
           <div className="grid-4-col">
             <div className="field-group">
-              <label>Salutation:</label>
-              <select value={salutation} onChange={(e) => setSalutation(e.target.value)}>
+              <label htmlFor="salutation">Salutation:</label>
+              <select 
+                id="salutation"
+                value={salutation} 
+                onChange={(e) => setSalutation(e.target.value)}
+              >
                 <option value="">Select</option>
                 <option value="Mr.">Mr.</option>
                 <option value="Mrs.">Mrs.</option>
@@ -316,25 +307,28 @@ export default function App() {
               </select>
             </div>
             <div className="field-group">
-              <label>First Name:</label>
+              <label htmlFor="firstName">First Name:</label>
               <input 
                 type="text" 
+                id="firstName"
                 value={firstName} 
                 onChange={(e) => setFirstName(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>Middle Name:</label>
+              <label htmlFor="middleName">Middle Name:</label>
               <input 
                 type="text" 
+                id="middleName"
                 value={middleName} 
                 onChange={(e) => setMiddleName(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>Last Name:</label>
+              <label htmlFor="lastName">Last Name:</label>
               <input 
                 type="text" 
+                id="lastName"
                 value={lastName} 
                 onChange={(e) => setLastName(e.target.value)} 
               />
@@ -344,9 +338,10 @@ export default function App() {
           {/* 3. DOB + Gender + Marital Status (3x1) */}
           <div className="grid-3-col">
             <div className="field-group">
-              <label>Date of Birth:</label>
+              <label htmlFor="dateOfBirth">Date of Birth:</label>
               <input 
                 type="date" 
+                id="dateOfBirth"
                 value={dateOfBirth} 
                 onChange={(e) => setDateOfBirth(e.target.value)} 
               />
@@ -410,25 +405,28 @@ export default function App() {
           {/* 4. Nationality + PAN + Aadhaar (3x1) */}
           <div className="grid-3-col">
             <div className="field-group">
-              <label>Nationality:</label>
+              <label htmlFor="nationality">Nationality:</label>
               <input 
                 type="text" 
+                id="nationality"
                 value={nationality} 
                 onChange={(e) => setNationality(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>PAN:</label>
+              <label htmlFor="pan">PAN:</label>
               <input 
                 type="text" 
+                id="pan"
                 value={pan} 
                 onChange={(e) => setPan(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>Aadhaar Number:</label>
+              <label htmlFor="aadhaarNumber">Aadhaar Number:</label>
               <input 
                 type="text" 
+                id="aadhaarNumber"
                 value={aadhaarNumber} 
                 onChange={(e) => setAadhaarNumber(e.target.value)} 
               />
@@ -438,25 +436,28 @@ export default function App() {
           {/* 5. Phone + Alternate + Email (3x1) */}
           <div className="grid-3-col">
             <div className="field-group">
-              <label>Phone Number:</label>
+              <label htmlFor="phoneNumber">Phone Number:</label>
               <input 
                 type="tel" 
+                id="phoneNumber"
                 value={phoneNumber} 
                 onChange={(e) => setPhoneNumber(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>Alternate Phone Number:</label>
+              <label htmlFor="alternatePhoneNumber">Alternate Phone Number:</label>
               <input 
                 type="tel" 
+                id="alternatePhoneNumber"
                 value={alternatePhoneNumber} 
                 onChange={(e) => setAlternatePhoneNumber(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>Email Address:</label>
+              <label htmlFor="emailAddress">Email Address:</label>
               <input 
                 type="email" 
+                id="emailAddress"
                 value={emailAddress} 
                 onChange={(e) => setEmailAddress(e.target.value)} 
               />
@@ -465,8 +466,9 @@ export default function App() {
 
           {/* 6. Address (full width) */}
           <div className="field-group">
-            <label>Address:</label>
+            <label htmlFor="address">Address:</label>
             <textarea 
+              id="address"
               value={address} 
               onChange={(e) => setAddress(e.target.value)} 
             />
@@ -475,33 +477,37 @@ export default function App() {
           {/* 7. City + Zip + State + Country (4x1) */}
           <div className="grid-4-col">
             <div className="field-group">
-              <label>City:</label>
+              <label htmlFor="city">City:</label>
               <input 
                 type="text" 
+                id="city"
                 value={city} 
                 onChange={(e) => setCity(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>Zip Code:</label>
+              <label htmlFor="zipCode">Zip Code:</label>
               <input 
                 type="text" 
+                id="zipCode"
                 value={zipCode} 
                 onChange={(e) => setZipCode(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>State:</label>
+              <label htmlFor="state">State:</label>
               <input 
                 type="text" 
+                id="state"
                 value={state} 
                 onChange={(e) => setState(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>Country:</label>
+              <label htmlFor="country">Country:</label>
               <input 
                 type="text" 
+                id="country"
                 value={country} 
                 onChange={(e) => setCountry(e.target.value)} 
               />
@@ -616,9 +622,10 @@ export default function App() {
               </div>
             </div>
             <div className="field-group">
-              <label>No. of Dependents:</label>
+              <label htmlFor="numDependents">No. of Dependents:</label>
               <input 
                 type="number" 
+                id="numDependents"
                 value={numDependents} 
                 onChange={(e) => setNumDependents(e.target.value)} 
               />
@@ -628,22 +635,24 @@ export default function App() {
           {/* 2. Monthly Income + Monthly Expense (2x1) */}
           <div className="grid-2-col">
             <div className="field-group">
-              <label>Monthly Income:</label>
+              <label htmlFor="monthlyIncome">Monthly Income:</label>
               <div className="currency-input">
                 <span className="currency-symbol">₹</span>
                 <input 
                   type="number" 
+                  id="monthlyIncome"
                   value={monthlyIncome} 
                   onChange={(e) => setMonthlyIncome(e.target.value)} 
                 />
               </div>
             </div>
             <div className="field-group">
-              <label>Monthly Expense:</label>
+              <label htmlFor="monthlyExpense">Monthly Expense:</label>
               <div className="currency-input">
                 <span className="currency-symbol">₹</span>
                 <input 
                   type="number" 
+                  id="monthlyExpense"
                   value={monthlyExpense} 
                   onChange={(e) => setMonthlyExpense(e.target.value)} 
                 />
@@ -654,15 +663,17 @@ export default function App() {
           {/* 3. Monthly Income Details + Monthly Expenses Details (2x1) */}
           <div className="grid-2-col">
             <div className="field-group">
-              <label>Monthly Income Details:</label>
+              <label htmlFor="monthlyIncomeDetails">Monthly Income Details:</label>
               <textarea 
+                id="monthlyIncomeDetails"
                 value={monthlyIncomeDetails} 
                 onChange={(e) => setMonthlyIncomeDetails(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>Monthly Expenses Details / Existing Debt:</label>
+              <label htmlFor="monthlyExpensesDetails">Monthly Expenses Details / Existing Debt:</label>
               <textarea 
+                id="monthlyExpensesDetails"
                 value={monthlyExpensesDetails} 
                 onChange={(e) => setMonthlyExpensesDetails(e.target.value)} 
               />
@@ -738,7 +749,8 @@ export default function App() {
       <main>
         <h1>Aid Application - Page 2</h1>
 
-        <form onSubmit={handleFormSubmit}>
+        {/* The form's onSubmit is removed here */}
+        <form>
           <h2>Aid Details</h2>
 
           {/* 1. Type of Aid Required + Total Amount Required (2x1) */}
@@ -776,11 +788,12 @@ export default function App() {
               </div>
             </div>
             <div className="field-group">
-              <label>Total Amount Required:</label>
+              <label htmlFor="totalAmountRequired">Total Amount Required:</label>
               <div className="currency-input">
                 <span className="currency-symbol">₹</span>
                 <input 
                   type="number" 
+                  id="totalAmountRequired"
                   value={totalAmountRequired} 
                   onChange={(e) => setTotalAmountRequired(e.target.value)} 
                 />
@@ -818,11 +831,12 @@ export default function App() {
               </div>
             </div>
             <div className="field-group">
-              <label>Total of Other Aids Amount Received:</label>
+              <label htmlFor="totalOtherAidsAmount">Total of Other Aids Amount Received:</label>
               <div className="currency-input">
                 <span className="currency-symbol">₹</span>
                 <input 
                   type="number" 
+                  id="totalOtherAidsAmount"
                   value={totalOtherAidsAmount} 
                   onChange={(e) => setTotalOtherAidsAmount(e.target.value)} 
                 />
@@ -832,8 +846,9 @@ export default function App() {
 
           {/* 3. Details of Other Aid/Help Received (full width) */}
           <div className="field-group">
-            <label>Details of Other Aid/Help Received / Self Contribution:</label>
+            <label htmlFor="otherAidDetails">Details of Other Aid/Help Received / Self Contribution:</label>
             <textarea 
+              id="otherAidDetails"
               value={otherAidDetails} 
               onChange={(e) => setOtherAidDetails(e.target.value)} 
             />
@@ -842,11 +857,12 @@ export default function App() {
           {/* 4. Total Self-Contribution + Interest-free loan help (2x1) */}
           <div className="grid-2-col">
             <div className="field-group">
-              <label>Total Self-Contribution Amount:</label>
+              <label htmlFor="totalSelfContribution">Total Self-Contribution Amount:</label>
               <div className="currency-input">
                 <span className="currency-symbol">₹</span>
                 <input 
                   type="number" 
+                  id="totalSelfContribution"
                   value={totalSelfContribution} 
                   onChange={(e) => setTotalSelfContribution(e.target.value)} 
                 />
@@ -883,8 +899,9 @@ export default function App() {
 
           {/* 5. Tell us about yourself (full width) */}
           <div className="field-group">
-            <label>Tell us about yourself, your current situation, and why you deserve this aid:</label>
+            <label htmlFor="aboutYourself">Tell us about yourself, your current situation, and why you deserve this aid:</label>
             <textarea 
+              id="aboutYourself"
               value={aboutYourself} 
               onChange={(e) => setAboutYourself(e.target.value)}
               style={{ minHeight: '120px' }}
@@ -893,8 +910,9 @@ export default function App() {
 
           {/* 6. Loan Repayment Terms (full width) */}
           <div className="field-group">
-            <label>If yes, Loan Repayment Terms:</label>
+            <label htmlFor="loanRepaymentTerms">If yes, Loan Repayment Terms:</label>
             <textarea 
+              id="loanRepaymentTerms"
               value={loanRepaymentTerms} 
               onChange={(e) => setLoanRepaymentTerms(e.target.value)} 
             />
@@ -1035,17 +1053,19 @@ export default function App() {
               {/* Hospital Name + Doctor's Name (2x1) */}
               <div className="grid-2-col">
                 <div className="field-group">
-                  <label>Hospital/Nursing/Diagnostic Center Name:</label>
+                  <label htmlFor="hospitalName">Hospital/Nursing/Diagnostic Center Name:</label>
                   <input 
                     type="text" 
+                    id="hospitalName"
                     value={hospitalName} 
                     onChange={(e) => setHospitalName(e.target.value)} 
                   />
                 </div>
                 <div className="field-group">
-                  <label>Doctor's Name:</label>
+                  <label htmlFor="doctorName">Doctor's Name:</label>
                   <input 
                     type="text" 
+                    id="doctorName"
                     value={doctorName} 
                     onChange={(e) => setDoctorName(e.target.value)} 
                   />
@@ -1055,15 +1075,17 @@ export default function App() {
               {/* Treatment Type Details + Treatment Estimate (2x1) */}
               <div className="grid-2-col">
                 <div className="field-group">
-                  <label>Diagnostics/Surgery/Treatment Type Details:</label>
+                  <label htmlFor="treatmentTypeDetails">Diagnostics/Surgery/Treatment Type Details:</label>
                   <textarea 
+                    id="treatmentTypeDetails"
                     value={treatmentTypeDetails} 
                     onChange={(e) => setTreatmentTypeDetails(e.target.value)} 
                   />
                 </div>
                 <div className="field-group">
-                  <label>Diagnostic/Treatment Estimate/Cost Breakdown:</label>
+                  <label htmlFor="treatmentEstimate">Diagnostic/Treatment Estimate/Cost Breakdown:</label>
                   <textarea 
+                    id="treatmentEstimate"
                     value={treatmentEstimate} 
                     onChange={(e) => setTreatmentEstimate(e.target.value)} 
                   />
@@ -1073,16 +1095,18 @@ export default function App() {
               {/* Treatment Duration + Prescription (2x1) */}
               <div className="grid-2-col">
                 <div className="field-group">
-                  <label>Treatment Days/Duration:</label>
+                  <label htmlFor="treatmentDuration">Treatment Days/Duration:</label>
                   <input 
                     type="text" 
+                    id="treatmentDuration"
                     value={treatmentDuration} 
                     onChange={(e) => setTreatmentDuration(e.target.value)} 
                   />
                 </div>
                 <div className="field-group">
-                  <label>Prescription for Medicine / Device:</label>
+                  <label htmlFor="prescription">Prescription for Medicine / Device:</label>
                   <textarea 
+                    id="prescription"
                     value={prescription} 
                     onChange={(e) => setPrescription(e.target.value)} 
                   />
@@ -1099,17 +1123,19 @@ export default function App() {
               {/* Institute Name + Course Name (2x1) */}
               <div className="grid-2-col">
                 <div className="field-group">
-                  <label>Institute Name:</label>
+                  <label htmlFor="instituteName">Institute Name:</label>
                   <input 
                     type="text" 
+                    id="instituteName"
                     value={instituteName} 
                     onChange={(e) => setInstituteName(e.target.value)} 
                   />
                 </div>
                 <div className="field-group">
-                  <label>Course/Program Name:</label>
+                  <label htmlFor="courseName">Course/Program Name:</label>
                   <input 
                     type="text" 
+                    id="courseName"
                     value={courseName} 
                     onChange={(e) => setCourseName(e.target.value)} 
                   />
@@ -1119,16 +1145,18 @@ export default function App() {
               {/* Course Fees Cost Breakdown + Current Educational Qualification (2x1) */}
               <div className="grid-2-col">
                 <div className="field-group">
-                  <label>Course/Tuition Fees Cost Breakdown:</label>
+                  <label htmlFor="courseFeesCostBreakdown">Course/Tuition Fees Cost Breakdown:</label>
                   <textarea 
+                    id="courseFeesCostBreakdown"
                     value={courseFeesCostBreakdown} 
                     onChange={(e) => setCourseFeesCostBreakdown(e.target.value)} 
                   />
                 </div>
                 <div className="field-group">
-                  <label>Current Educational Qualification:</label>
+                  <label htmlFor="currentEducationalQualification">Current Educational Qualification:</label>
                   <input 
                     type="text" 
+                    id="currentEducationalQualification"
                     value={currentEducationalQualification} 
                     onChange={(e) => setCurrentEducationalQualification(e.target.value)} 
                   />
@@ -1151,6 +1179,7 @@ export default function App() {
       <main>
         <h1>Aid Application - Page 3</h1>
 
+        {/* The form's onSubmit is now correctly placed here for the final submission */}
         <form onSubmit={handleFormSubmit}>
           <h2>Documents Checklist</h2>
 
@@ -1308,9 +1337,10 @@ export default function App() {
 
           {/* Document Upload */}
           <div className="field-group">
-            <label>Upload the Checked Documents:</label>
+            <label htmlFor="uploadedDocuments">Upload the Checked Documents:</label>
             <input 
               type="file" 
+              id="uploadedDocuments"
               multiple 
               accept=".pdf,.jpg,.jpeg,.png,.gif" 
               onChange={(e) => setUploadedDocuments(Array.from(e.target.files))} 
@@ -1360,9 +1390,10 @@ export default function App() {
               </div>
             </div>
             <div className="field-group">
-              <label>Bank Name:</label>
+              <label htmlFor="bankName">Bank Name:</label>
               <input 
                 type="text" 
+                id="bankName"
                 value={bankName} 
                 onChange={(e) => setBankName(e.target.value)} 
               />
@@ -1372,17 +1403,19 @@ export default function App() {
           {/* Bank Branch + IFSC Code (2x1) */}
           <div className="grid-2-col">
             <div className="field-group">
-              <label>Bank Branch:</label>
+              <label htmlFor="bankBranch">Bank Branch:</label>
               <input 
                 type="text" 
+                id="bankBranch"
                 value={bankBranch} 
                 onChange={(e) => setBankBranch(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>IFSC Code:</label>
+              <label htmlFor="ifscCode">IFSC Code:</label>
               <input 
                 type="text" 
+                id="ifscCode"
                 value={ifscCode} 
                 onChange={(e) => setIfscCode(e.target.value)} 
               />
@@ -1392,17 +1425,19 @@ export default function App() {
           {/* Account Name + Account Number (2x1) */}
           <div className="grid-2-col">
             <div className="field-group">
-              <label>In Favor of / Account Name:</label>
+              <label htmlFor="accountName">In Favor of / Account Name:</label>
               <input 
                 type="text" 
+                id="accountName"
                 value={accountName} 
                 onChange={(e) => setAccountName(e.target.value)} 
               />
             </div>
             <div className="field-group">
-              <label>Account Number:</label>
+              <label htmlFor="accountNumber">Account Number:</label>
               <input 
                 type="text" 
+                id="accountNumber"
                 value={accountNumber} 
                 onChange={(e) => setAccountNumber(e.target.value)} 
               />
@@ -1462,9 +1497,10 @@ export default function App() {
           </div>
 
           <div className="field-group">
-            <label>Applicant Signature / Thumb Impression:</label>
+            <label htmlFor="applicantSignature">Applicant Signature / Thumb Impression:</label>
             <input 
               type="text" 
+              id="applicantSignature"
               value={applicantSignature} 
               onChange={(e) => setApplicantSignature(e.target.value)} 
               placeholder="Type your full name as signature"
@@ -1474,7 +1510,7 @@ export default function App() {
           <div className="button-container">
             <div className="grid-2-col">
               <button type="button" onClick={() => setCurrentPage(2)}>Previous</button>
-              <button type="submit">Submit</button>
+              <button type="submit">Submit</button> {/* This button now correctly triggers handleFormSubmit */}
               <p>{formStatus}</p>
             </div>
           </div>
